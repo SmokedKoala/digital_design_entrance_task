@@ -2,6 +2,8 @@ package ru.java;
 
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Main {
 
@@ -9,7 +11,10 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String inputStr;
         inputStr = scanner.nextLine();
-        System.out.println(strConvertion(inputStr.toCharArray()));
+        if (isValid(inputStr))
+            System.out.println(strConvertion(inputStr.toCharArray()));
+        else
+            System.out.println("the string is not valid");
     }
 
     public static String strConvertion(char[] inputStr){
@@ -51,5 +56,35 @@ public class Main {
             }
         }
         return strToReturn;
+    }
+
+    public static boolean isValid(String inputStr){
+        int numOfBrackets = 0;
+        for (int i = 0; i<inputStr.length();i++){
+
+//            является ли число только счётчиком
+            if (Character.isDigit(inputStr.toCharArray()[i]))
+                if (inputStr.toCharArray()[i+1]!='[') {
+                    return false;
+                }
+
+            if (inputStr.toCharArray()[i] == '['){
+                numOfBrackets++;
+            }
+
+//            есть ли закрывающая скобка перед открывающей
+            if (inputStr.toCharArray()[i] == ']') {
+                numOfBrackets--;
+                if (numOfBrackets<0) {
+                    return false;
+                }
+            }
+        }
+        //есть ли незакрытые скобки
+        if (numOfBrackets!=0) {
+            return false;
+        }
+
+        return (Pattern.matches("[a-zA-Z\\[\\]0-9]+",inputStr));
     }
 }
